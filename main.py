@@ -76,19 +76,19 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.comboBox_action.currentTextChanged.connect(self.MainApp_clicked_search_h)
         self.comboBox_status_h.currentTextChanged.connect(self.MainApp_clicked_search_h)
 
-        self.dateEdit_min.setEnabled(False)
-        self.dateEdit_max.setEnabled(False)
-        self.dateEdit_min.dateChanged.connect(self.MainApp_clicked_search_h)
-        self.dateEdit_max.dateChanged.connect(self.MainApp_clicked_search_h)
-        self.dateEdit_min_otch.dateChanged.connect(self.MainApp_clicked_search_h)
-        self.dateEdit_max_otch.dateChanged.connect(self.MainApp_clicked_search_h)
-
-        self.lineEdit.setValidator(QtGui.QRegExpValidator(QRegExp("^([1-9][0-9]*|0)"), self))
-        self.lineEdit.setEnabled(False)
-        self.lineEdit.textChanged.connect(self.MainApp_vvod_nomera)
-        self.lineEdit.setEnabled(True)
-        self.lineEdit.setFocus()
-        self.tableView_select.doubleClicked.connect(self.tableView_select_doubleClicked)
+        # self.dateEdit_min.setEnabled(False)
+        # self.dateEdit_max.setEnabled(False)
+        # self.dateEdit_min.dateChanged.connect(self.MainApp_clicked_search_h)
+        # self.dateEdit_max.dateChanged.connect(self.MainApp_clicked_search_h)
+        # self.dateEdit_min_otch.dateChanged.connect(self.MainApp_clicked_search_h)
+        # self.dateEdit_max_otch.dateChanged.connect(self.MainApp_clicked_search_h)
+        #
+        # self.lineEdit.setValidator(QtGui.QRegExpValidator(QRegExp("^([1-9][0-9]*|0)"), self))
+        # self.lineEdit.setEnabled(False)
+        # self.lineEdit.textChanged.connect(self.MainApp_vvod_nomera)
+        # self.lineEdit.setEnabled(True)
+        # self.lineEdit.setFocus()
+        # self.tableView_select.doubleClicked.connect(self.tableView_select_doubleClicked)
         # self.tableView_history.changeEvent.connect(self.tableView_select_doubleClicked)
 
     # ----------------------------------Картриджи------------------------------------#
