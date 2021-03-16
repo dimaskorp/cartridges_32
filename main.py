@@ -511,7 +511,6 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
                                                                          QHeaderView.ResizeToContents)  # Ширина по содержимому
         self.TableWidget_History.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.TableWidget_History.setStyleSheet("QHeaderView::section {background-color:gray}")
-        self.TableWidget_History.setSortingEnabled(True)
         self.TableWidget_History.setAlternatingRowColors(True)  # цвет четных и нечетных строк
         # Устанавливаем выравнивание на заголовки
         self.TableWidget_History.horizontalHeaderItem(0).setTextAlignment(Qt.AlignHCenter)
@@ -536,7 +535,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.TableWidget_History.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
         # делаем ресайз колонок по содержимому
         # self.TableWidget.resizeColumnsToContents()
-        #self.TableWidget_History.setSortingEnabled(True)  # Возможность сортироваки
+        # self.TableWidget_History.setSortingEnabled(True)  # Возможность сортироваки
 
     # Фильтр по баркоду в таблице Журнал
     def MainApp_Select_History(self):
@@ -921,7 +920,6 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
             for i in range(count):
                 if self.TableWidget_History.item(i, 1).checkState() == QtCore.Qt.Checked:
                     number = self.TableWidget_History.item(i, 1).text()
-
                     l_number.append(number)
                 else:
                     pass
@@ -935,7 +933,8 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
             writer = pd.ExcelWriter("./test.xlsx", engine='xlsxwriter')
             df.to_excel(writer, sheet_name='Sheet1', header=False, index=False, merge_cells=True, startcol=-1)
             worksheet = writer.sheets['Sheet1']
-            worksheet.set_column(0, 3, 21.30)
+            worksheet.set_column(0, 3, 21.40)
+            worksheet.set_default_row(35)
 
             # Вставьте изображение с масштабированием.
             y_offset = 0
@@ -955,7 +954,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
                     y_offset = 0
                     x_offset = 624
                 worksheet.insert_image(col, l_item_name[i], {'x_offset': x_offset, 'y_offset': y_offset, 'x_scale': 0.25, 'y_scale': 0.3})
-                y_offset += 45
+                y_offset += 46
                 i += 1
             writer.save()
             os.startfile(r'.\test.xlsx')
