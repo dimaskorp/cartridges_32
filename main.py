@@ -47,8 +47,8 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.clicks = None
         self.clicks_history_ID = 0
         self.MainApp_combo_model()
-        self.MainApp_combo_status()
         self.MainApp_combo_action()
+        self.MainApp_combo_status()
 
         self.pB_add.clicked.connect(AddForm_open)
         self.guideDepartments.triggered.connect(StatusForm_open)
@@ -230,7 +230,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
 
     # Выподающий список модели во вкладке Картриджи
     def MainApp_combo_model(self):
-        model = QtSql.QSqlRelationalTableModel(self)
+        model = QtSql.QSqlTableModel(self)
         model.setTable('Model')
         model.setEditStrategy(QtSql.QSqlTableModel.OnManualSubmit)
         model.setFilter("model!=''")
@@ -341,7 +341,6 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.spisok.clear()
         self.lineEdit.clear()
         self.MainApp_spisok_cart()
-
         self.MainApp_clear_filter_h()
         self.MainApp_vvod_nomera()
         self.lineEdit.setFocus()
@@ -422,7 +421,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
 
     # Выподающий список действие во вкладке Журнал
     def MainApp_combo_action(self):
-        model = QtSql.QSqlRelationalTableModel(self)
+        model = QtSql.QSqlTableModel(self)
         model.setTable('tb_Action')
         model.setEditStrategy(QtSql.QSqlTableModel.OnManualSubmit)
         model.setFilter("action!=''")
@@ -869,7 +868,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
             row = row + 1
 
 
-    # --------------------------------Отчеты и выгрузки----------------------------------#
+    #--------------------------------Отчеты и выгрузки----------------------------------#
     # Выгрузка в Excel
     def uploading_to_Excel(self):
         count = self.TableWidget_History.rowCount()
@@ -931,30 +930,30 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
                 item_name += 1
             df = pd.DataFrame(l_item_name)
             writer = pd.ExcelWriter("./test.xlsx", engine='xlsxwriter')
+
             df.to_excel(writer, sheet_name='Sheet1', header=False, index=False, merge_cells=True, startcol=-1)
             worksheet = writer.sheets['Sheet1']
+            worksheet.set_paper(21)  # Установите тип бумаги.
+            worksheet.center_horizontally()  # Центрируйте печатную страницу по горизонтали.
+            worksheet.set_margins(left=0.0, right=0.0, top=0.0, bottom=0.0)  # Установите поля рабочего листа для печатной страницы.
             worksheet.set_column(0, 3, 21.40)
             worksheet.set_default_row(35)
-
             # Вставьте изображение с масштабированием.
             y_offset = 0
             x_offset = 0
-            col = "A1"
+            colA = "A1"
+            colB = "B1"
+
             for i in range(0, len(l_number), 1):
-                if i == 22:
-                    y_offset = 0
-                    x_offset = 156
-                elif i == 44:
-                    y_offset = 0
-                    x_offset = 312
-                elif i == 66:
-                    y_offset = 0
-                    x_offset = 468
-                elif i == 88:
-                    y_offset = 0
-                    x_offset = 624
-                worksheet.insert_image(col, l_item_name[i], {'x_offset': x_offset, 'y_offset': y_offset, 'x_scale': 0.25, 'y_scale': 0.3})
-                y_offset += 46
+                if i % 2 == 0:
+                    worksheet.insert_image(colA, l_item_name[i],
+                                           {'x_offset': x_offset, 'y_offset': y_offset, 'x_scale': 0.25,
+                                            'y_scale': 0.3})
+                else:
+                    worksheet.insert_image(colB, l_item_name[i],
+                                           {'x_offset': x_offset, 'y_offset': y_offset, 'x_scale': 0.25,
+                                            'y_scale': 0.3})
+                    y_offset += 46
                 i += 1
             writer.save()
             os.startfile(r'.\test.xlsx')
