@@ -1,7 +1,6 @@
 import os
 import random
 import shutil
-import sqlite3
 from datetime import datetime
 from pathlib import Path
 
@@ -22,7 +21,6 @@ import mainwindow
 import modelform
 import statusform
 
-import usb.core
 
 
 # Главная форма
@@ -47,7 +45,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.spisok = []
 
         self.clicks = None
-        self.clicks_history = 0
+        self.clicks_history_ID = 0
         self.MainApp_combo_model()
         self.MainApp_combo_status()
         self.MainApp_combo_action()
@@ -64,7 +62,8 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.pB_clear_filter.clicked.connect(self.MainApp_clear_filter)
         self.pB_clear_filter_h.clicked.connect(self.MainApp_clear_filter_h)
         self.pB_edit.clicked.connect(self.MainApp_clicked_pushButton_edit)
-        self.pB_print_select.clicked.connect(self.Barcode_print_Added)
+        self.pB_print_select.clicked.connect(self.Barcode_print_g_Added)
+        self.pB_print_select_2.clicked.connect(self.Barcode_print_Added)
         self.pB_excel.clicked.connect(self.uploading_to_Excel)
         self.pushButton_3.clicked.connect(self.report_for_period)
         self.pushButton_2.clicked.connect(self.refilled_for_period)
@@ -323,11 +322,13 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
                                                QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
         if msgBox == QtWidgets.QMessageBox.Yes:
             self.clicks = 0
-            self.modelTable_Select_cart.removeRow(self.tableView_select.currentIndex().row())
-            self.modelTable_Select_cart.submitAll()
-            self.MainApp_Select_Cart()
             self.MainApp_Insert_History()
-            self.MainApp_Select_History()
+            query = QtSql.QSqlQuery("DELETE "
+                                    " FROM Cart"
+                                    " WHERE Cart.number = " + self.spisok[0] + "")  # объект запроса
+            while query.next():
+                query.record().clear()
+            self.MainApp_spisok_cart()
             self.spisok.clear()
             self.lineEdit.setFocus()
             self.modelTable_Select_cart.clear()
@@ -340,7 +341,8 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.spisok.clear()
         self.lineEdit.clear()
         self.MainApp_spisok_cart()
-        self.MainApp_spisok_history()
+
+        self.MainApp_clear_filter_h()
         self.MainApp_vvod_nomera()
         self.lineEdit.setFocus()
         self.comboBox_model.setCurrentIndex(0)
@@ -369,15 +371,15 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
 
     # -----------------------------------Журнал--------------------------------------#
     def clicks_history(self):  # Проверка состояния таблицы
-        if self.clicks_history == 0:
+        if self.clicks_history_ID == 0:
             self.MainApp_spisok_history()
-        elif self.clicks_history == 1:
+        elif self.clicks_history_ID == 1:
             self.MainApp_Select_History()
-        elif self.clicks_history == 2:
+        elif self.clicks_history_ID == 2:
             self.MainApp_clicked_search_h()
 
     def MainApp_spisok_history(self):
-        self.clicks_history = 0
+        self.clicks_history_ID = 0
         self.template_History()
         row = 0
         query = QtSql.QSqlQuery("SELECT "
@@ -443,7 +445,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.comboBox_status_h.setModelColumn(column)
 
     # Очистка фильтра во вкладке Журнал
-    def MainApp_clear_filter_h(self, state):
+    def MainApp_clear_filter_h(self):
         self.dateEdit_min.setDateTime(datetime.today())
         self.dateEdit_max.setDateTime(datetime.today())
         self.MainApp_spisok_history()
@@ -534,11 +536,11 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.TableWidget_History.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
         # делаем ресайз колонок по содержимому
         # self.TableWidget.resizeColumnsToContents()
-        self.TableWidget_History.setSortingEnabled(True)  # Возможность сортироваки
+        #self.TableWidget_History.setSortingEnabled(True)  # Возможность сортироваки
 
     # Фильтр по баркоду в таблице Журнал
     def MainApp_Select_History(self):
-        self.clicks_history = 1
+        self.clicks_history_ID = 1
         self.template_History()
         row = 0
         query = QtSql.QSqlQuery("SELECT "
@@ -593,7 +595,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
 
     # Поиск по фильтру из выподающего списка в таближе Журнал
     def MainApp_clicked_search_h(self):
-        self.clicks_history = 2
+        self.clicks_history_ID = 2
         action_box = self.comboBox_action.currentText()
         TableAction = QtSql.QSqlTableModel()  # Временная модель таблицы Action
         TableAction.setTable('tb_Action')
@@ -919,6 +921,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
             for i in range(count):
                 if self.TableWidget_History.item(i, 1).checkState() == QtCore.Qt.Checked:
                     number = self.TableWidget_History.item(i, 1).text()
+
                     l_number.append(number)
                 else:
                     pass
@@ -928,7 +931,61 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
                                               {"quiet_zone": 2, "text_distance": 1, "module_height": 8})
                 l_item_name.append(file_name)
                 item_name += 1
+            df = pd.DataFrame(l_item_name)
+            writer = pd.ExcelWriter("./test.xlsx", engine='xlsxwriter')
+            df.to_excel(writer, sheet_name='Sheet1', header=False, index=False, merge_cells=True, startcol=-1)
+            worksheet = writer.sheets['Sheet1']
+            worksheet.set_column(0, 3, 21.30)
 
+            # Вставьте изображение с масштабированием.
+            y_offset = 0
+            x_offset = 0
+            col = "A1"
+            for i in range(0, len(l_number), 1):
+                if i == 22:
+                    y_offset = 0
+                    x_offset = 156
+                elif i == 44:
+                    y_offset = 0
+                    x_offset = 312
+                elif i == 66:
+                    y_offset = 0
+                    x_offset = 468
+                elif i == 88:
+                    y_offset = 0
+                    x_offset = 624
+                worksheet.insert_image(col, l_item_name[i], {'x_offset': x_offset, 'y_offset': y_offset, 'x_scale': 0.25, 'y_scale': 0.3})
+                y_offset += 45
+                i += 1
+            writer.save()
+            os.startfile(r'.\test.xlsx')
+            shutil.rmtree(path)  # Удаляет текущую директорию и все поддиректории
+        if count == 0:
+            msgBox = QtWidgets.QMessageBox()
+            msgBox.setWindowTitle("Warning")
+            msgBox.information(self, "Warning", "Нет данных по указанным параметрам")
+            return msgBox
+
+    def Barcode_print_g_Added(self):
+        count = self.TableWidget_History.rowCount()
+        if count >= 1:
+            path = Path(r".\temp_png")
+            path.mkdir(exist_ok=True)
+            l_number = list()
+            l_item_name = list()
+            item_name = 1
+            for i in range(count):
+                if self.TableWidget_History.item(i, 1).checkState() == QtCore.Qt.Checked:
+                    number = self.TableWidget_History.item(i, 1).text()
+                    l_number.append(number)
+                else:
+                    pass
+            for elem in range(len(l_number)):
+                barCodeImage = barcode.codex.Code39(str(l_number[elem]), writer=ImageWriter(), add_checksum=False)
+                file_name = barCodeImage.save(path / str(item_name),
+                                              {"quiet_zone": 2, "text_distance": 1, "module_height": 8})
+                l_item_name.append(file_name)
+                item_name += 1
             df = pd.DataFrame(l_item_name)
             writer = pd.ExcelWriter("./test.xlsx", engine='xlsxwriter')
             df.to_excel(writer, sheet_name='Sheet1', header=False, index=False, merge_cells=True, startcol=-1)
@@ -1629,8 +1686,8 @@ class AddForm(addform.Ui_Dialog, QDialog):
         TableCart.select()
         cart_id = TableCart.data(TableCart.index(0, 0))
         TableAction = QtSql.QSqlTableModel()  # Временная модель таблицы Action
-        TableAction.setTable('Action')
-        TableAction.setFilter("Action.action = 'Добавление' ")
+        TableAction.setTable('tb_Action')
+        TableAction.setFilter("tb_Action.action = 'Добавление' ")
         TableAction.select()
         action_id = TableAction.data(TableAction.index(0, 0))
         self.modelTable_Insert_history.setTable("History")

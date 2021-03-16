@@ -275,7 +275,11 @@ class Ui_MainWindow(object):
 
         self.pB_print_select = QPushButton(self.page_2)
         self.pB_print_select.setObjectName(u"pB_print_select")
-        self.pB_print_select.setGeometry(QRect(370, 59, 121, 23))
+        self.pB_print_select.setGeometry(QRect(300, 59, 141, 23))
+
+        self.pB_print_select_2 = QPushButton(self.page_2)
+        self.pB_print_select_2.setObjectName(u"pB_print_select")
+        self.pB_print_select_2.setGeometry(QRect(450, 59, 121, 23))
 
         self.toolBox.addItem(self.page_2, "Журнал")
 
@@ -430,7 +434,10 @@ class Ui_MainWindow(object):
         self.label_8.setText(QCoreApplication.translate("MainWindow", "c", None))
         self.label_9.setText(QCoreApplication.translate("MainWindow", "по", None))
         self.pB_print_select.setText(
+            QCoreApplication.translate("MainWindow", "Печать штрих кода глянец", None))
+        self.pB_print_select_2.setText(
             QCoreApplication.translate("MainWindow", "Печать штрих кода", None))
+
         self.toolBox.setItemText(self.toolBox.indexOf(self.page_2), QCoreApplication.translate("MainWindow", "Журнал", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", "Дата", None))
         self.pushButton_3.setText(QCoreApplication.translate("MainWindow", "Движение картриджей за период", None))
