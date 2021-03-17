@@ -930,7 +930,6 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
                 item_name += 1
             df = pd.DataFrame(l_item_name)
             writer = pd.ExcelWriter("./test.xlsx", engine='xlsxwriter')
-
             df.to_excel(writer, sheet_name='Sheet1', header=False, index=False, merge_cells=True, startcol=-1)
             worksheet = writer.sheets['Sheet1']
             worksheet.set_paper(21)  # Установите тип бумаги.
@@ -943,7 +942,6 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
             x_offset = 0
             colA = "A1"
             colB = "B1"
-
             for i in range(0, len(l_number), 1):
                 if i % 2 == 0:
                     worksheet.insert_image(colA, l_item_name[i],
