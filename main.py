@@ -41,26 +41,19 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.checkBox_All.stateChanged.connect(self.clicks_history)
         self.MainApp_spisok_cart()
         self.MainApp_spisok_history()
-
         self.spisok = []
-
         self.clicks = None
         self.clicks_history_ID = 0
         self.MainApp_combo_model()
         self.MainApp_combo_action()
         self.MainApp_combo_status()
-
         self.pB_add.clicked.connect(AddForm_open)
         self.guideDepartments.triggered.connect(StatusForm_open)
         self.guideModel.triggered.connect(ModelForm_open)
-
-        self.pB_save.setEnabled(False)
-        self.pB_delete.setEnabled(False)
-        self.pB_edit.setEnabled(False)
         self.pB_save.clicked.connect(self.MainApp_clicked_pushButton_save)
         self.pB_delete.clicked.connect(self.MainApp_Delete_Cart)
         self.pB_clear_filter.clicked.connect(self.MainApp_clear_filter)
-        self.pB_clear_filter_h.clicked.connect(self.MainApp_clear_filter_h)
+        self.pB_clear_filter_h.clicked.connect(self.MainApp_clear_filter)
         self.pB_edit.clicked.connect(self.MainApp_clicked_pushButton_edit)
         self.pB_print_select.clicked.connect(self.Barcode_print_g_Added)
         self.pB_print_select_2.clicked.connect(self.Barcode_print_Added)
@@ -69,26 +62,18 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.pushButton_2.clicked.connect(self.refilled_for_period)
         self.pushButton_4.clicked.connect(self.status_report)
         self.pushButton_5.clicked.connect(self.action_report)
-
         self.comboBox_model.currentTextChanged.connect(self.MainApp_clicked_search)
         self.comboBox_status.currentTextChanged.connect(self.MainApp_clicked_search)
         self.comboBox_action.currentTextChanged.connect(self.MainApp_clicked_search_h)
         self.comboBox_status_h.currentTextChanged.connect(self.MainApp_clicked_search_h)
-
-        self.dateEdit_min.setEnabled(False)
-        self.dateEdit_max.setEnabled(False)
         self.dateEdit_min.dateChanged.connect(self.MainApp_clicked_search_h)
         self.dateEdit_max.dateChanged.connect(self.MainApp_clicked_search_h)
         self.dateEdit_min_otch.dateChanged.connect(self.MainApp_clicked_search_h)
         self.dateEdit_max_otch.dateChanged.connect(self.MainApp_clicked_search_h)
-
         self.lineEdit.setValidator(QtGui.QRegExpValidator(QRegExp("^([1-9][0-9]*|0)"), self))
-        self.lineEdit.setEnabled(False)
         self.lineEdit.textChanged.connect(self.MainApp_vvod_nomera)
-        self.lineEdit.setEnabled(True)
-        self.lineEdit.setFocus()
         self.tableView_select.doubleClicked.connect(self.tableView_select_doubleClicked)
-        # self.tableView_history.changeEvent.connect(self.tableView_select_doubleClicked)
+
 
     # ----------------------------------Картриджи------------------------------------#
     # Ввод номера Баркода
