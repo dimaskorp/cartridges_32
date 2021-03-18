@@ -1,6 +1,7 @@
 import os
 import random
 import shutil
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -1997,7 +1998,10 @@ class ModelForm(modelform.Ui_Dialog, QDialog):
 
 
 if __name__ == "__main__":
-    app = QApplication()
+    app = QApplication(sys.argv)
+    screen_rect = app.primaryScreen().availableGeometry()
+    width = screen_rect.width()
+    height = screen_rect.height()
     qt_mainform = MainApp()
     qt_addform = AddForm()
     qt_statusform = StatusForm()

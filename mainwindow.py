@@ -88,7 +88,7 @@ class Ui_MainWindow(object):
         self.pB_save = QPushButton(self.page)
         self.pB_save.setObjectName("pB_save")
         self.pB_save.setEnabled(False)
-        self.pB_save.setGeometry(QRect(850, 360, 100, 23))
+        self.pB_save.setGeometry(QRect(850, 360, 100, 25))
 
         self.tableView_select = QTableView(self.page)
         self.tableView_select.setObjectName("tableView_select")
