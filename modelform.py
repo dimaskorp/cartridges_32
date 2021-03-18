@@ -1,36 +1,52 @@
 from PySide2.QtCore import (QCoreApplication, QMetaObject, QRect, QSize, Qt)
-from PySide2.QtGui import (QIcon)
+from PySide2.QtGui import (QIcon, QFont)
 from PySide2.QtWidgets import *
-
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
-            Dialog.setObjectName(u"Dialog")
-        Dialog.resize(260, 200)
-        Dialog.setMinimumSize(QSize(260, 200))
-        Dialog.setMaximumSize(QSize(260, 205))
-        self.splitter = QSplitter(Dialog)
-        self.splitter.setObjectName(u"splitter")
-        self.splitter.setGeometry(QRect(10, 10, 241, 181))
-        self.splitter.setOrientation(Qt.Vertical)
+            Dialog.setObjectName("Dialog")
+        #Dialog.resize(600, 500)
+        Dialog.setMinimumSize(QSize(600, 500))
+        Dialog.setMaximumSize(QSize(600, 500))
+        font = QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(16)
+        font.setBold(True)
 
-        self.lineEdit_ModelForm = QLineEdit(self.splitter)
-        self.lineEdit_ModelForm.setObjectName(u"lineEdit_ModelForm")
-        self.splitter.addWidget(self.lineEdit_ModelForm)
+        self.toolBox_m = QToolBox(Dialog)
+        self.toolBox_m.setObjectName("toolBox_m")
+        self.toolBox_m.setGeometry(10, 10, 600, 500)
+        self.toolBox_m.setFont(font)
+        self.toolBox_m.setLayoutDirection(Qt.LeftToRight)
 
-        self.widget = QWidget(self.splitter)
-        self.widget.setObjectName(u"widget")
-        self.splitter.addWidget(self.widget)
+        # self.splitter = QSplitter(Dialog)
+        # self.splitter.setObjectName("splitter")
+        # self.splitter.setGeometry(QRect(10, 10, 580, 480))
+        # self.splitter.setOrientation(Qt.Vertical)
+
+        self.lineEdit_ModelForm = QLineEdit(self.toolBox_m)
+        self.lineEdit_ModelForm.setObjectName("lineEdit_ModelForm")
+        self.lineEdit_ModelForm.setGeometry(QRect(150, 0, 200, 25))
+        self.lineEdit_ModelForm.setFrame(True)
+        self.lineEdit_ModelForm.setEchoMode(QLineEdit.Normal)
+        self.lineEdit_ModelForm.setClearButtonEnabled(True)
+
+
+
+
+        self.widget = QWidget(self.toolBox_m)
+        self.widget.setObjectName("widget")
+
 
         self.horizontalLayout = QHBoxLayout(self.widget)
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        #self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalSpacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
         self.pB_add_ModelForm = QPushButton(self.widget)
-        self.pB_add_ModelForm.setObjectName(u"pB_add_ModelForm")
+        self.pB_add_ModelForm.setObjectName("pB_add_ModelForm")
         sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -63,9 +79,9 @@ class Ui_Dialog(object):
         self.pB_delete_ModelForm.setIcon(icon2)
         self.horizontalLayout.addWidget(self.pB_delete_ModelForm)
 
-        self.tableView_ModelForm = QTableView(self.splitter)
-        self.tableView_ModelForm.setObjectName(u"tableView_ModelForm")
-        self.splitter.addWidget(self.tableView_ModelForm)
+        self.tableView_ModelForm = QTableView(self.toolBox_m)
+        self.tableView_ModelForm.setObjectName("tableView_ModelForm")
+
         self.retranslateUi(Dialog)
 
         QMetaObject.connectSlotsByName(Dialog)
