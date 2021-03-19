@@ -6,31 +6,14 @@ from PySide2.QtGui import (QCursor, QFont,
                            QIcon)
 from PySide2.QtWidgets import *
 from PySide2.QtWidgets import QAction, QWidget, QToolBox, QToolBar
-from PySide2 import QtGui
-import sys
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName("MainWindow")
-        # MainWindow.resize(1000, 600)
-        # sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        # sizePolicy.setHorizontalStretch(0)
-        # sizePolicy.setVerticalStretch(0)
-        # sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
-        # MainWindow.setSizePolicy(sizePolicy)
-        # MainWindow.setToolTipDuration(1)
-        # MainWindow.setCentralWidget(self.centralwidget)
-        # sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        # sizePolicy1.setHorizontalStretch(0)
-        # sizePolicy1.setVerticalStretch(0)
-        # sizePolicy1.setHeightForWidth(self.toolBox.sizePolicy().hasHeightForWidth())
-        # self.toolBox.setSizePolicy(sizePolicy1)
-        # self.toolBox.setMinimumSize(QSize(0, 0))
-        # self.toolBox.setSizeIncrement(QSize(0, 0))
-        # self.toolBox.setBaseSize(QSize(0, 0))
         MainWindow.setMinimumSize(QSize(1000, 600))
+
         font = QFont()
         font.setFamily("Times New Roman")
         font.setPointSize(16)
@@ -44,20 +27,14 @@ class Ui_MainWindow(object):
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.centralwidget.setFont(font)
+
         self.toolBox = QToolBox(self.centralwidget)
         self.toolBox.setObjectName("toolBox")
         self.toolBox.setGeometry(10, 10, 1000, 500)
         self.toolBox.setFont(font)
         self.toolBox.setLayoutDirection(Qt.LeftToRight)
-        #self.toolBox.setCursor(QCursor(Qt.ArrowCursor))
-        #self.toolBox.setFocusPolicy(Qt.NoFocus)
-        #self.toolBox.setContextMenuPolicy(Qt.ActionsContextMenu)
-        #self.toolBox.setToolTipDuration(0)
-        #self.toolBox.setInputMethodHints(Qt.ImhNone)
-        #self.toolBox.setFrameShape(QFrame.NoFrame)
-        #self.toolBox.setFrameShadow(QFrame.Plain)
-        #self.toolBox.setLineWidth(0)
         self.toolBox.setAutoFillBackground(True)
+
         self.actionClose = QAction(MainWindow)
         self.actionClose.setObjectName("actionClose")
         self.actionClose.setFont(font_m)
@@ -371,18 +348,16 @@ class Ui_MainWindow(object):
         self.menubar.setFont(font_m)
         self.retranslateUi(MainWindow)
         self.actionClose.triggered.connect(MainWindow.close)
-        #self.toolBox.setCurrentIndex(0)
-        #self.toolBox.layout().setSpacing(6)
         QMetaObject.connectSlotsByName(MainWindow)
 
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", "Учет картриджей"))
+        MainWindow.setWindowTitle("Учет картриджей")
         MainWindow.setWindowIcon(QIcon('images/iconc.jpg'))
-        self.actionClose.setText(QCoreApplication.translate("MainWindow", "Выход"))
-        self.actionClose.setShortcut(QCoreApplication.translate("MainWindow", "Alt+X"))
-        self.guideModel.setText(QCoreApplication.translate("MainWindow", "Модели картриджей"))
+        self.actionClose.setText("Выход")
+        self.actionClose.setShortcut("Alt+X")
+        self.guideModel.setText("Модели картриджей")
         self.guideDepartments.setText(QCoreApplication.translate("MainWindow", "Отделения и статусы"))
         self.pB_clear_filter.setText(QCoreApplication.translate("MainWindow", "Сбросить фильтр"))
         self.pB_save.setText(QCoreApplication.translate("MainWindow", "Сохранить"))
