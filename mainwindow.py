@@ -109,12 +109,12 @@ class Ui_MainWindow(object):
 
         self.pB_send = QPushButton(self.page)
         self.pB_send.setObjectName("pB_send")
-        self.pB_send.setGeometry(QRect(550, 360, 100, 25))
+        self.pB_send.setGeometry(QRect(650, 360, 200, 25))
         self.pB_send.setVisible(False)
 
         self.pB_accept = QPushButton(self.page)
         self.pB_accept.setObjectName("pB_accept")
-        self.pB_accept.setGeometry(QRect(650, 360, 100, 25))
+        self.pB_accept.setGeometry(QRect(650, 360, 200, 25))
         self.pB_accept.setVisible(False)
 
         self.label = QLabel(self.page)
@@ -326,9 +326,6 @@ class Ui_MainWindow(object):
         self.toolBar = QToolBar(MainWindow)
         self.toolBar.setObjectName("toolBar")
         MainWindow.addToolBar(Qt.BottomToolBarArea, self.toolBar)
-        # QWidget.setTabOrder(self.tableView_select, self.pB_add)
-        # QWidget.setTabOrder(self.pB_add, self.pB_save)
-        # QWidget.setTabOrder(self.pB_save, self.TableWidget)
 
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuDepartments.menuAction())
@@ -352,8 +349,8 @@ class Ui_MainWindow(object):
         self.guideDepartments.setText("Отделения и статусы")
         self.pB_clear_filter.setText("Сбросить фильтр")
         self.pB_save.setText("Сохранить")
-        self.pB_send.setText("Отправить")
-        self.pB_accept.setText("Приянть")
+        self.pB_send.setText("Отправить на заправку")
+        self.pB_accept.setText("Приянть с заправки")
         self.label.setText("Номер картриджа")
         self.label_2.setText("Модель картриджа")
         self.label_3.setText("Статус")
