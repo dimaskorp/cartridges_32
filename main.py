@@ -21,7 +21,7 @@ import addform
 import mainwindow
 import modelform
 import statusform
-
+import sqlite3
 
 
 # Главная форма
@@ -63,6 +63,10 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.pushButton_2.clicked.connect(self.refilled_for_period)
         self.pushButton_4.clicked.connect(self.status_report)
         self.pushButton_5.clicked.connect(self.action_report)
+
+        self.pB_send.clicked.connect(self.function_send)
+        self.pB_accept.clicked.connect(self.function_accept)
+
         self.comboBox_model.currentTextChanged.connect(self.MainApp_clicked_search)
         self.comboBox_status.currentTextChanged.connect(self.MainApp_clicked_search)
         self.comboBox_action.currentTextChanged.connect(self.MainApp_clicked_search_h)
@@ -265,6 +269,16 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
                 "cart.model_id=" + str(model_id) + " AND " + "cart.status_id='" + str(status_id) + "' ")
         else:
             self.MainApp_spisok_cart()
+        if status_id == 1410104600456:
+            self.pB_send.setVisible(True)
+            self.pB_accept.setVisible(False)
+        elif status_id == 9488158258168:
+            self.pB_accept.setVisible(True)
+            self.pB_send.setVisible(False)
+        else:
+            self.pB_send.setVisible(False)
+            self.pB_accept.setVisible(False)
+
         self.modelTable_Select_cart.setRelation(4, QSqlRelation("Status", "id", "status"))
         self.modelTable_Select_cart.setRelation(3, QSqlRelation("Model", "id", "model"))
         self.modelTable_Select_cart.setHeaderData(0, QtCore.Qt.Horizontal, "id")
@@ -353,6 +367,56 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
             self.tableView_select.setEditTriggers(QAbstractItemView.AllEditTriggers)
         else:
             self.tableView_select.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+    def function_send(self):
+        todey = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+        Cod_status = 9488158258168
+        count = self.modelTable_Select_cart.rowCount()
+        if count >= 1:
+            for elem in range(count):
+                number = self.modelTable_Select_cart.record(elem).value(1)
+                model = QtSql.QSqlTableModel(self)
+                model.setTable('Cart')
+                model.setFilter("Cart.number= '" + str(number) + "' ")
+                model.select()
+                model.setData(model.index(0, 4), Cod_status)
+                model.setData(model.index(0, 5), str(todey))
+                model.submitAll()
+            self.MainApp_clear_filter()
+            msgBox = QtWidgets.QMessageBox()
+            msgBox.setWindowTitle("Warning")
+            msgBox.information(self, "Warning", "На заправку отправлено " + str(count) + " картриджей")
+            return msgBox
+        if count == 0:
+            msgBox = QtWidgets.QMessageBox()
+            msgBox.setWindowTitle("Warning")
+            msgBox.information(self, "Warning", "Нет данных по выбранному фильтру")
+            return msgBox
+
+    def function_accept(self):
+        todey = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+        Cod_status = 1310104600467
+        count = self.modelTable_Select_cart.rowCount()
+        if count >= 1:
+            for elem in range(count):
+                number = self.modelTable_Select_cart.record(elem).value(1)
+                model = QtSql.QSqlTableModel(self)
+                model.setTable('Cart')
+                model.setFilter("Cart.number= '" + str(number) + "' ")
+                model.select()
+                model.setData(model.index(0, 4), Cod_status)
+                model.setData(model.index(0, 5), str(todey))
+                model.submitAll()
+            self.MainApp_clear_filter()
+            msgBox = QtWidgets.QMessageBox()
+            msgBox.setWindowTitle("Warning")
+            msgBox.information(self, "Warning", "Принято с заправки " + str(count) + " картриджей")
+            return msgBox
+        if count == 0:
+            msgBox = QtWidgets.QMessageBox()
+            msgBox.setWindowTitle("Warning")
+            msgBox.information(self, "Warning", "Нет данных по выбранному фильтру")
+            return msgBox
 
     # -----------------------------------Журнал--------------------------------------#
     def clicks_history(self):  # Проверка состояния таблицы

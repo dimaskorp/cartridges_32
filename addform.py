@@ -110,14 +110,14 @@ class Ui_Dialog(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", "Добавление картриджа", None))
+        Dialog.setWindowTitle("Добавление картриджа")
         Dialog.setWindowIcon(QIcon('images/iconc.jpg'))
-        self.label.setText(QCoreApplication.translate("Dialog", "Баркод:", None))
-        self.label_2.setText(QCoreApplication.translate("Dialog", "Фирма:", None))
-        self.label_3.setText(QCoreApplication.translate("Dialog", "Модель:", None))
-        self.label_4.setText(QCoreApplication.translate("Dialog", "Статус:", None))
-        self.pB_Save.setText(QCoreApplication.translate("Dialog", "Сохранить", None))
-        self.checkBox.setText(QCoreApplication.translate("Dialog", "Выбор из списка", None))
+        self.label.setText("Баркод:")
+        self.label_2.setText("Фирма:")
+        self.label_3.setText("Модель:")
+        self.label_4.setText("Статус:")
+        self.pB_Save.setText("Сохранить")
+        self.checkBox.setText("Выбор из списка")
 
     # retranslateUi
 
