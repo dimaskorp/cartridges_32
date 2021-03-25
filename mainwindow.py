@@ -97,7 +97,6 @@ class Ui_MainWindow(object):
         self.lineEdit.setFrame(True)
         self.lineEdit.setEchoMode(QLineEdit.Normal)
         self.lineEdit.setClearButtonEnabled(True)
-        self.lineEdit.setFocus()
 
         self.pB_delete = QPushButton(self.page)
         self.pB_delete.setObjectName("pB_delete")

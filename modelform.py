@@ -56,7 +56,7 @@ class Ui_Dialog(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", "Модели", None))
+        Dialog.setWindowTitle("Модели")
         Dialog.setWindowIcon(QIcon('images/iconc.jpg'))
 
     # retranslateUi

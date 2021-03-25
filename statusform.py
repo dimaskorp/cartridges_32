@@ -7,7 +7,6 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        # Dialog.resize(400, 510)
         Dialog.setMinimumSize(QSize(600, 500))
         Dialog.setMaximumSize(QSize(600, 500))
         font = QFont()
@@ -43,6 +42,7 @@ class Ui_Dialog(object):
         self.pB_edit_StatusForm = QPushButton(self.toolBox_s)
         self.pB_edit_StatusForm.setObjectName("pB_edit_StatusForm")
         self.pB_edit_StatusForm.setGeometry(QRect(110, 40, 100, 25))
+        self.pB_edit_StatusForm.setCheckable(True)
         icon1 = QIcon()
         icon1.addFile("images/edit.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pB_edit_StatusForm.setIcon(icon1)
@@ -64,9 +64,9 @@ class Ui_Dialog(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", "Отделения и статусы", None))
+        Dialog.setWindowTitle("Отделения и статусы")
         Dialog.setWindowIcon(QIcon('images/iconc.jpg'))
-        self.pB_print_StatusForm.setText(QCoreApplication.translate("Dialog", "Печать штрих кода", None))
+        self.pB_print_StatusForm.setText("Печать штрих кода")
 
     # retranslateUi
 

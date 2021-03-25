@@ -32,18 +32,23 @@ class Ui_Dialog(object):
         self.lineEdit_Firma = QLineEdit(Dialog)
         self.lineEdit_Firma.setObjectName("lineEdit_Firma")
         self.lineEdit_Firma.setGeometry(QRect(140, 120, 150, 25))
+        self.lineEdit_Firma.setPlaceholderText('Введите фирму...')
 
         self.lineEdit_Model = QLineEdit(Dialog)
         self.lineEdit_Model.setObjectName("lineEdit_Model")
         self.lineEdit_Model.setGeometry(QRect(140, 160, 150, 25))
+        self.lineEdit_Model.setPlaceholderText('Введите марку...')
 
         self.lineEdit_Barcode = QLineEdit(Dialog)
         self.lineEdit_Barcode.setObjectName("lineEdit_Barcode")
         self.lineEdit_Barcode.setGeometry(QRect(140, 40, 150, 25))
+        self.lineEdit_Barcode.setMaxLength(13)
 
         self.lineEdit_Status = QLineEdit(Dialog)
         self.lineEdit_Status.setObjectName("lineEdit_Status")
         self.lineEdit_Status.setGeometry(QRect(140, 80, 150, 25))
+        self.lineEdit_Status.setMaxLength(13)
+        self.lineEdit_Status.setPlaceholderText('Где находится..')
 
         self.label = QLabel(Dialog)
         self.label.setObjectName("label_Barcode")
@@ -70,12 +75,13 @@ class Ui_Dialog(object):
         self.comboBox_status_add.setObjectName("comboBox_status_add")
         self.comboBox_status_add.setGeometry(QRect(140, 80, 150, 25))
         self.comboBox_status_add.setEditable(False)
+        self.comboBox_status_add.setVisible(False)
 
         self.comboBox_model_add = QComboBox(Dialog)
         self.comboBox_model_add.setObjectName("comboBox_model_add")
         self.comboBox_model_add.setGeometry(QRect(140, 160, 150, 25))
         self.comboBox_model_add.setEditable(False)
-        self.comboBox_model_add.raise_()
+        self.comboBox_model_add.setVisible(False)
 
         self.checkBox = QCheckBox(Dialog)
         self.checkBox.setObjectName("checkBox")

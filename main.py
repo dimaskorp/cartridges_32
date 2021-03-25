@@ -63,7 +63,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.pushButton_2.clicked.connect(self.refilled_for_period)
         self.pushButton_4.clicked.connect(self.status_report)
         self.pushButton_5.clicked.connect(self.action_report)
-
+        self.lineEdit.setFocus()
         self.pB_send.clicked.connect(self.function_send)
         self.pB_accept.clicked.connect(self.function_accept)
 
@@ -1531,31 +1531,18 @@ class AddForm(addform.Ui_Dialog, QDialog):
     def __init__(self, parent=None):
         super(AddForm, self).__init__(parent)
         self.setupUi(self)
-        self.comboBox_status_add.setVisible(False)
-        self.comboBox_model_add.setVisible(False)
         self.checkBox.stateChanged.connect(self.Select_from_the_list)
-
         self.modelTable_Select_gde = QtSql.QSqlRelationalTableModel()
         self.modelTable_Select_cart = QtSql.QSqlRelationalTableModel()
         self.modelTable_Insert_cart = QtSql.QSqlRelationalTableModel()
         self.modelTable_Insert_history = QtSql.QSqlRelationalTableModel()
         self.modelTable_Model = QtSql.QSqlRelationalTableModel()
         self.modelTable_Status = QtSql.QSqlRelationalTableModel()
-
-        self.lineEdit_Barcode.setMaxLength(13)
-        self.lineEdit_Status.setMaxLength(13)
         self.lineEdit_Barcode.setValidator(QtGui.QRegExpValidator(QRegExp("^([1-9][0-9]*|0)"), self))
         self.lineEdit_Status.setValidator(QtGui.QRegExpValidator(QRegExp("^([1-9][0-9]*|0)"), self))
-
-        self.lineEdit_Status.setPlaceholderText('Где находится...')
-        self.lineEdit_Firma.setPlaceholderText('Введите фирму...')
-        self.lineEdit_Model.setPlaceholderText('Введите марку...')
-
         self.pB_Save.clicked.connect(self.AddForm_Saves)
         self.pB_add_model.clicked.connect(ModelForm_open)
         self.pB_add_status.clicked.connect(StatusForm_open)
-
-        # self.pB_print.clicked.connect(self.Barcode_print)
 
     def AddForm_Saves(self):
         BarCod = self.lineEdit_Barcode.text()
