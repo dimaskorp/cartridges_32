@@ -32,7 +32,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
 
         self.db = QtSql.QSqlDatabase.addDatabase("QSQLITE")
         self.db.setDatabaseName("CART_DB.db")
-        self.db.open()
+
 
         self.modelTable_Select_status = QtSql.QSqlRelationalTableModel()
         self.modelTable_Insert_history = QtSql.QSqlRelationalTableModel()
@@ -120,6 +120,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
 
     # Вывод первоночального списка во вкладке Картриджи
     def MainApp_spisok_cart(self):
+        self.db.open()
         self.modelTable_Select_cart.setTable("Cart")
         self.modelTable_Select_cart.setRelation(4, QSqlRelation("Status", "id", "status"))
         self.modelTable_Select_cart.setRelation(3, QSqlRelation("Model", "id", "model"))
@@ -340,6 +341,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
     def MainApp_clear_filter(self):
         self.spisok.clear()
         self.lineEdit.clear()
+        self.db.close()
         self.MainApp_spisok_cart()
         self.MainApp_clear_filter_h()
         self.MainApp_vvod_nomera()
@@ -2049,7 +2051,7 @@ class ModelForm(modelform.Ui_Dialog, QDialog):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    app = QApplication()
     screen_rect = app.primaryScreen().availableGeometry()
     width = screen_rect.width()
     height = screen_rect.height()
@@ -2058,5 +2060,5 @@ if __name__ == "__main__":
     qt_statusform = StatusForm()
     qt_modelform = ModelForm()
     qt_mainform.show()
-    app.setStyle(u"fusion")
+    app.setStyle("fusion")
     app.exec_()
