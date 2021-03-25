@@ -341,6 +341,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
     def MainApp_clear_filter(self):
         self.spisok.clear()
         self.lineEdit.clear()
+        self.pB_edit.setChecked(False)
         self.db.close()
         self.MainApp_spisok_cart()
         self.MainApp_clear_filter_h()

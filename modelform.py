@@ -37,6 +37,7 @@ class Ui_Dialog(object):
         self.pB_edit_ModelForm = QPushButton(self.toolBox_m)
         self.pB_edit_ModelForm.setObjectName("pB_edit_ModelForm")
         self.pB_edit_ModelForm.setGeometry(QRect(110, 40, 100, 25))
+        self.pB_edit_ModelForm.setCheckable(True)
         icon1 = QIcon()
         icon1.addFile("images/edit.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pB_edit_ModelForm.setIcon(icon1)

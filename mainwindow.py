@@ -77,7 +77,7 @@ class Ui_MainWindow(object):
         self.pB_add.setGeometry(QRect(0, 350, 40, 30))
 
         icon = QIcon()
-        icon.addFile("images/add.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile("images/add.png")
         self.pB_add.setIcon(icon)
 
         self.pB_edit = QPushButton(self.page)
@@ -85,10 +85,10 @@ class Ui_MainWindow(object):
         self.pB_edit.setGeometry(QRect(50, 350, 40, 30))
         self.pB_edit.setEnabled(False)
         icon2 = QIcon()
-        icon2.addFile("images/edit.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon2.addFile("images/edit.png")
         self.pB_edit.setIcon(icon2)
         self.pB_edit.setCheckable(True)
-        self.pB_edit.setChecked(False)
+        #self.pB_edit.setChecked(False)
 
         self.lineEdit = QLineEdit(self.page)
         self.lineEdit.setObjectName("lineEdit")
@@ -103,7 +103,7 @@ class Ui_MainWindow(object):
         self.pB_delete.setGeometry(QRect(100, 350, 40, 30))
         self.pB_delete.setEnabled(False)
         icon1 = QIcon()
-        icon1.addFile("images/delete.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon1.addFile("images/delete.png")
         self.pB_delete.setIcon(icon1)
 
         self.pB_send = QPushButton(self.page)
@@ -142,7 +142,7 @@ class Ui_MainWindow(object):
         self.pB_excel.setFont(font1)
         self.pB_excel.setAutoFillBackground(False)
         icon3 = QIcon()
-        icon3.addFile("images/excel.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon3.addFile("images/excel.png")
         self.pB_excel.setIcon(icon3)
         self.toolBox.addItem(self.page, "Картриджи")
 

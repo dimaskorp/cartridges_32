@@ -2,20 +2,35 @@
 # python setup.py bdist_msi
 from cx_Freeze import setup, Executable
 
+# shortcut_table = [
+#     ("DesktopShortcut",                                             # Shortcut
+#      "DesktopFolder",                                               # Directory_
+#      "Учет картриджей",                                            # Name
+#      "TARGETDIR",                                                   # Component_
+#      "[TARGETDIR]main.exe",                                 # Target
+#      None,                                                          # Arguments
+#      None,                                                          # Description
+#      None,                                                          # Hotkey
+#      None,                                                          # Icon
+#      None,                                                          # IconIndex
+#      None,                                                          # ShowCmd
+#      "TARGETDIR",                                                   # WkDir
+#      )
+# ]
+#
+# msi_data = {"Shortcut": shortcut_table}
+#
+# bdist_msi_options = {'data': msi_data}
 
-#executables = [Executable('main.py', base='Win32GUI', icon='iconc.ico', shortcutName='Учет картриджей', shortcutDir='ProgramMenuFolder')]
-executables = [Executable('main.py', base='Win32GUI')]
+executables = [Executable('main.py', base='Win32GUI', icon='i2.ico', shortcut_name='Учет картриджей', shortcut_dir='DesktopFolder')]
 
-#build_exe_options = ['CART_DB.db', 'images', 'fonts']
-build_exe_options = ['images', 'fonts']
+build_exe_options = ["images", "fonts"]
 
-#zip_include_packages = ['lib']
-
-#options = {'build_exe': {"include_files": build_exe_options, 'include_msvcr': True}}
+#options = {'build_exe': {"include_files": build_exe_options}}
 options = {'build_exe': {"include_files": build_exe_options}}
 
-setup(name='main',
-      version='1.0',
+setup(name='Учет картриджей',
+      version='1.2',
       description='Демо версия',
       executables=executables,
       options=options)
