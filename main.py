@@ -1,7 +1,6 @@
 import os
 import random
 import shutil
-import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -21,18 +20,16 @@ import addform
 import mainwindow
 import modelform
 import statusform
-import sqlite3
 
 
 # Главная форма
 class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
-    def __init__(self, state=None):  # Переопределяем конструктор класса
+    def __init__(self):  # Переопределяем конструктор класса
         super(MainApp, self).__init__()  # Обязательно нужно вызвать метод супер класса
         self.setupUi(self)
 
         self.db = QtSql.QSqlDatabase.addDatabase("QSQLITE")
         self.db.setDatabaseName("CART_DB.db")
-
 
         self.modelTable_Select_status = QtSql.QSqlRelationalTableModel()
         self.modelTable_Insert_history = QtSql.QSqlRelationalTableModel()
@@ -73,12 +70,9 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.comboBox_status_h.currentTextChanged.connect(self.MainApp_clicked_search_h)
         self.dateEdit_min.dateChanged.connect(self.MainApp_clicked_search_h)
         self.dateEdit_max.dateChanged.connect(self.MainApp_clicked_search_h)
-        self.dateEdit_min_otch.dateChanged.connect(self.MainApp_clicked_search_h)
-        self.dateEdit_max_otch.dateChanged.connect(self.MainApp_clicked_search_h)
         self.lineEdit.setValidator(QtGui.QRegExpValidator(QRegExp("^([1-9][0-9]*|0)"), self))
         self.lineEdit.textChanged.connect(self.MainApp_vvod_nomera)
         self.tableView_select.doubleClicked.connect(self.tableView_select_doubleClicked)
-
 
     # ----------------------------------Картриджи------------------------------------#
     # Ввод номера Баркода
@@ -145,9 +139,6 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.tableView_select.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
         self.tableView_select.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.Stretch)
         self.tableView_select.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
-        # self.tableView_select.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # таблица по размеру содержимого
-        # self.tableView_select.setSelectionBehavior(self.tableView_select.SelectRows)  # Разрешаем выделение строк
-        # self.tableView_select.setSelectionMode(self.tableView_select.ExtendedSelection)  # режим выделения лишь одной ячейки в таблице
 
     # Вывод запроса по баркоду в таблице Картриджи
     def MainApp_Select_Cart(self):
@@ -920,7 +911,6 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
             self.TableWidget_History.setItem(row, 1, self.chkBoxItem)
             row = row + 1
 
-
     #--------------------------------Отчеты и выгрузки----------------------------------#
     # Выгрузка в Excel
     def uploading_to_Excel(self):
@@ -1095,13 +1085,11 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.modelTable_Select_history.setRelation(1, QSqlRelation("Cart", "id", "number"))
         self.modelTable_Select_history.setRelation(2, QSqlRelation("Model", "id", "model"))
         self.modelTable_Select_history.setRelation(3, QSqlRelation("Status", "id", "status"))
-        self.modelTable_Select_history.setRelation(5, QSqlRelation("Action", "id", "action"))
-        self.modelTable_Select_history.setFilter(
-            "history.datatime >= '" + date_Changed_min_o + "' AND history.datatime <= '" + date_Changed_max_o + "' ")
-        self.modelTable_Select_history.setSort(0,
-                                               Qt.DescendingOrder)  # Устанавливаем сортировку по возрастанию данных по 0 колонке
+        self.modelTable_Select_history.setRelation(5, QSqlRelation("tb_Action", "id", "action"))
+        self.modelTable_Select_history.setFilter("history.datatime >= '" + date_Changed_min_o + "' AND history.datatime <= '" + date_Changed_max_o + "' ")
+        self.modelTable_Select_history.setSort(0, Qt.DescendingOrder)  # Устанавливаем сортировку по возрастанию данных по 0 колонке
         self.modelTable_Select_history.select()
-        count = self.TableWidget_History.rowCount()
+        count = self.modelTable_Select_history.rowCount()
         if count >= 1:
             l_number = []
             l_model = []
@@ -1110,18 +1098,15 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
             l_action = []
             for elem in range(count):
                 number = self.modelTable_Select_history.record(elem).value(1)
+                model = self.modelTable_Select_history.record(elem).value(2)
                 status = self.modelTable_Select_history.record(elem).value(3)
                 date = self.modelTable_Select_history.record(elem).value(4)
                 action = self.modelTable_Select_history.record(elem).value(5)
                 l_number.append(number)
+                l_model.append(model)
                 l_status.append(status)
                 l_date.append(date)
                 l_action.append(action)
-                self.modelTable_Select_cart.setTable("Cart")
-                self.modelTable_Select_cart.setFilter("cart.number= '" + str(number) + "' ")
-                self.modelTable_Select_cart.select()
-                model = self.modelTable_Select_cart.data(self.modelTable_Select_cart.index(0, 2))
-                l_model.append(model)
 
             pdf = qt_mainform.CustomPDF()
             pdf.alias_nb_pages()
@@ -1192,12 +1177,9 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
         self.modelTable_Select_history.setRelation(1, QSqlRelation("Cart", "id", "number"))
         self.modelTable_Select_history.setRelation(2, QSqlRelation("Model", "id", "model"))
         self.modelTable_Select_history.setRelation(3, QSqlRelation("Status", "id", "status"))
-        self.modelTable_Select_history.setRelation(5, QSqlRelation("Action", "id", "action"))
-        self.modelTable_Select_history.setFilter(
-            "history.datatime >= '" + date_Changed_min_o + "' AND history.datatime <= '" + date_Changed_max_o + "' AND history.status_id = '" + str(
-                1410104600456) + "' ")
-        self.modelTable_Select_history.setSort(0,
-                                               Qt.DescendingOrder)  # Устанавливаем сортировку по возрастанию данных по 0 колонке
+        self.modelTable_Select_history.setRelation(5, QSqlRelation("tb_Action", "id", "action"))
+        self.modelTable_Select_history.setFilter("history.datatime >= '" + date_Changed_min_o + "' AND history.datatime <= '" + date_Changed_max_o + "' AND history.status_id = '" + str(1410104600456) + "' ")
+        self.modelTable_Select_history.setSort(0, Qt.DescendingOrder)  # Устанавливаем сортировку по возрастанию данных по 0 колонке
         self.modelTable_Select_history.select()
         count = self.modelTable_Select_history.rowCount()
         if count >= 1:
