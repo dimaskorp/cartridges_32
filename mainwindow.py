@@ -148,7 +148,7 @@ class Ui_MainWindow(object):
 
         #---------------------------page_2--------------------------------#
         self.page_2 = QWidget()
-        self.page_2.setObjectName(u"page_2")
+        self.page_2.setObjectName("page_2")
         self.page_2.setFont(font1)
 
         self.TableWidget = QWidget(self.page_2)

@@ -1005,7 +1005,7 @@ class MainApp(mainwindow.Ui_MainWindow, QtWidgets.QMainWindow):
             msgBox.information(self, "Warning", "Нет данных по указанным параметрам")
             return msgBox
 
-    def Barcode_print_g_Added(self):
+    def Barcode_print_g_Added(self): # на глянцевой бумаге
         count = self.TableWidget_History.rowCount()
         if count >= 1:
             path = Path(r".\temp_png")
@@ -1737,6 +1737,7 @@ class StatusForm(statusform.Ui_Dialog, QDialog):
         super(StatusForm, self).__init__(parent)
         self.setupUi(self)
         self.modelTable_Status = QtSql.QSqlRelationalTableModel()
+        self.modelTable_Divisions = QtSql.QSqlRelationalTableModel()
         self.lineEdit_StatusForm.setFocus()
         self.lineEdit_StatusForm.textChanged[str].connect(self.StatusForm_filter)
         self.StatusForm_spisok()
@@ -1847,21 +1848,29 @@ class StatusForm(statusform.Ui_Dialog, QDialog):
 
     # Печать штрихкода отделов
     def StatusForm_print_Added(self):
+        k1=0
+        self.modelTable_Divisions.setTable("tb_Divisions")
+        self.modelTable_Divisions.select()
+        count_div = self.modelTable_Divisions.rowCount()
+        l_name_divisions = list()
+        for y in range(1, count_div):
+            name_divisions = self.modelTable_Divisions.record(y).value(1)
+            l_name_divisions.append(name_divisions)
+        self.modelTable_Status.setTable("Status")
+        self.modelTable_Status.setRelation(2, QSqlRelation("tb_Divisions", "id", "name"))
+        self.modelTable_Status.setSort(0, Qt.AscendingOrder)  # Устанавливаем сортировку по возрастанию данных по 0 колонке
+        self.modelTable_Status.select()
         count = self.modelTable_Status.rowCount()
         if count >= 1:
             path = Path(r".\temp_png")
             path.mkdir(exist_ok=True)
             l_number = list()
-            l_name = list()
             l_item_name = list()
             item_name = 1
-            for elem in range(count):
+            for elem in range(1, count):  # формирование рисунка
                 number = self.modelTable_Status.record(elem).value(0)
-                name = self.modelTable_Status.record(elem).value(1)
                 l_number.append(number)
-                l_name.append(name)
-                barcode_writer = ImageWriter()
-                barCodeImage = barcode.codex.Code39(str(l_number[elem]), writer=ImageWriter(), add_checksum=False)
+                barCodeImage = barcode.codex.Code39(str(l_number[elem - 1]), writer=ImageWriter(), add_checksum=False)
                 file_name = barCodeImage.save(path / str(item_name),
                                               {"quiet_zone": 5, "text_distance": 2, "module_height": 10})
                 l_item_name.append(file_name)
@@ -1870,48 +1879,86 @@ class StatusForm(statusform.Ui_Dialog, QDialog):
             writer = pd.ExcelWriter("./test.xlsx", engine='xlsxwriter')
             df.to_excel(writer, sheet_name='Sheet1', header=False, index=False, merge_cells=True, startcol=-1)
             worksheet = writer.sheets['Sheet1']
+
             # Вставьте изображение с масштабированием.
-            y_offset = 0  # положение штрихкода
-            x_offset = 0
-            y_offset_2 = 55  # положение текста
             col = "A1"
-            for i in range(0, count, 1):
-                if i == 8:  # первый столбец первая страница
-                    y_offset = 0
-                    y_offset_2 = 55
-                    x_offset = 200
-                elif i == 16:  # второй столбец первая страница
-                    y_offset = 0
-                    y_offset_2 = 55
-                    x_offset = 400
-                elif i == 24:  # третий столбец первая страница
-                    y_offset = 1000
-                    y_offset_2 = 1055
-                    x_offset = 0
 
-                elif i == 32:  # первый столбец вторая страница
-                    y_offset = 1000
-                    y_offset_2 = 1055
-                    x_offset = 200
-                elif i == 40:  # второй столбец вторая страница
-                    y_offset = 1000
-                    y_offset_2 = 1055
-                    x_offset = 400
-                elif i == 48:  # третий столбец вторая страница
-                    y_offset = 2000
-                    y_offset_2 = 2055
-                    x_offset = 0
-
-                worksheet.insert_image(col, l_item_name[i],
-                                       {'x_offset': x_offset, 'y_offset': y_offset, 'x_scale': 0.25, 'y_scale': 0.3})
-                y_offset += 120
-                worksheet.insert_textbox(col, l_name[i],
-                                         {'x_offset': x_offset, 'y_offset': y_offset_2, 'x_scale': 0.89, 'y_scale': 0.2,
-                                          'font': {'color': 'black', 'bold': True, 'size': 10},
+            y_offset_1 = 0  # подразделение
+            x_offset_1 = 0
+            y_offset = 50  # положение штрихкода
+            x_offset = 0
+            y_offset_2 = 105  # положение текста
+            a = 0
+            for x in range(0, count_div-1):
+                worksheet.insert_textbox(col, l_name_divisions[x],
+                                         {'x_offset': x_offset_1, 'y_offset': y_offset_1, 'x_scale': 0.90, 'y_scale': 0.2,
+                                          'font': {'color': 'black', 'bold': True, 'size': 16},
                                           'align': {'vertical': 'middle', 'horizontal': 'center'},
                                           'line': {'none': True}, })
-                y_offset_2 += 120
-                i += 1
+                div = l_name_divisions[x]
+                l_name_status = list()
+                for k in range(1, count):  # формирование рисунка
+                    name_div = self.modelTable_Status.record(k).value(2)
+                    name_status = self.modelTable_Status.record(k).value(1)
+                    l_name_status.append(name_status)
+                    if div == name_div:
+                        if k1 == 8:  # 2 столбец 1 страница
+                            x_offset = 200
+                            y_offset = 50
+                            y_offset_2 = 105
+                            a = 2
+                        elif k1 == 16:  # 3 столбец 1 страница
+                            x_offset_1 = 400
+                            y_offset = 50
+                            y_offset_2 = 105
+                            a = 3
+                        elif k1 == 24:  # 1 столбец 2 страница
+                            a = 4
+                            y_offset = 1045
+                            y_offset_2 = 1100
+                            x_offset = 0
+                        elif k1 == 32:  # 2 столбец 2 страница
+                            a = 5
+                            x_offset_1 = 200
+                            x_offset = 200
+                            y_offset = 1045
+                            #y_offset_1 = 995
+                            y_offset_2 = 1100
+                        elif k1 == 40:  # 3 столбец 2 страница
+                            a = 6
+                            x_offset = 400
+                            y_offset = 1045
+                            y_offset_2 = 1100
+
+
+
+                        worksheet.insert_image(col, l_item_name[k-1], {'x_offset': x_offset, 'y_offset': y_offset, 'x_scale': 0.25, 'y_scale': 0.3})
+                        worksheet.insert_textbox(col, l_name_status[k-1],
+                                                 {'x_offset': x_offset, 'y_offset': y_offset_2, 'x_scale': 0.90, 'y_scale': 0.2,
+                                                  'font': {'color': 'black', 'bold': True, 'size': 10},
+                                                  'align': {'vertical': 'middle', 'horizontal': 'center'},
+                                                  'line': {'none': True}, })
+                        y_offset += 120
+                        y_offset_2 += 120
+                        k1 += 1
+                    else:
+                        pass
+                if a == 2:
+                    x_offset_1 += 200
+                    y_offset_1 += 0
+                elif a == 3:
+                    x_offset_1 += 400
+                    y_offset_1 += 0
+                elif a == 4:
+                    x_offset_1 += 600
+                    y_offset_1 += 0
+
+                # y_offset_1 = y_offset_2 - 70   # положение заголовка
+
+                y_offset = y_offset_2 - 20  # положение штрихкода
+
+                y_offset_2 = y_offset_2 + 35  # положение текста
+
             writer.save()
             os.startfile(r'.\test.xlsx')
             shutil.rmtree(path)  # Удаляет текущую директорию и все поддиректории
